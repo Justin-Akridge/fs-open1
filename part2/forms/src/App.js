@@ -26,7 +26,6 @@ const App = () => {
         console.log(response)
       })
     
-    
   }
 
   const handleNoteChange = (e)  => {
