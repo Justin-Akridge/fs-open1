@@ -1,62 +1,80 @@
-import { useState } from "react";
-//import  Note from "./components/Note"
-import Person from "./components/Person";
+import { useState, useEffect } from "react";
+import  Person from "./components/Person"
+//import Note from "./components/Note"
+import axios from "axios";
 
 const App = () => {
-  //add names
-  const [persons, setPersons] = useState([]) 
-  const [newName, setNewName] = useState('')
-  //add numbers
-  const [numbers, setNumbers] = useState([])
-  const [newNumber, setNewNumber] = useState([])
+// add names
+const [persons, setPersons] = useState([]) 
+const [newName, setNewName] = useState('')
+//add numbers
+const [numbers, setNumbers] = useState([])
+const [newNumber, setNewNumber] = useState('')
+  
+  useEffect(() => {
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        console.log(response)
+        setPersons(response.data)
+      })
+  },[])
 
-    const addNumber = (e) => {
-      e.preventDefault()
-      const numberobj = {
-        number: newNumber,
-        id: numbers.length + 1,
-      }
-      setNumbers(numberobj)
-      setNewNumber('')
+  const addNumber = (e) => {
+    e.preventDefault()
+    const numberobj = {
+      number: newNumber,
+      id: numbers.length + 1,
     }
+    setNumbers(numberobj)
+    setNewNumber('')
+  }
 
-    const handleNumber = (e) => {
-      setNewNumber(e.target.value)
+  const handleNumber = (e) => {
+    setNewNumber(e.target.value)
+  }
+
+  const addPerson = (e) => {
+    e.preventDefault()
+    console.log(e.target.value)
+    if(e.target.value === undefined){
+      return 
     }
-
-    const addPerson = (e) => {
-      e.preventDefault()
-      console.log(e.target.value)
-      if(e.target.value === undefined){
-        return 
-      }
-      const personobj = {
-        name: newName,
-        id: persons.length + 1,
-      }
-      const isDuplicate = (name) => {
-        for (let i=0; i<persons.length; i++) {
-          if(persons[i].name === name){
-            return true
-          }
+    const personobj = {
+      name: newName,
+      id: persons.length + 1,
+    }
+    const isDuplicate = (name) => {
+      for (let i=0; i<persons.length; i++) {
+        if(persons[i].name === name){
+          return true
         }
-        return false
       }
-      if(isDuplicate(newName)){
-        alert(`${newName} already exists`)
-        setNewName('')
-      }
-      else{
-        console.log(newName)
-        setPersons(persons.concat(personobj))
-        setNewName('')
-      }
+      return false
     }
-
-    const handlePerson = (e) => {
-      setNewName(e.target.value)
+    if(isDuplicate(newName)){
+      alert(`${newName} already exists`)
+      setNewName('')
     }
+    else{
+      console.log(newName)
+      setPersons(persons.concat(personobj))
+      setNewName('')
+    }
+  }
+  
+  const handlePerson = (e) => {
+    setNewName(e.target.value)
+  }
 
+  const initialValue = {
+    person: "",
+    number: ""
+  }
+
+  const Form = () => {
+    const [value, setValue] = useState(initialValue)
+  }
 
   return (
     <div>
@@ -131,3 +149,4 @@ export default App;
 //       </form>
 //     </div>
 //   );
+
